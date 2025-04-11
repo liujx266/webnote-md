@@ -266,7 +266,38 @@ function App() {
   
   // 添加标签
   const addTag = (tag: string) => {
-    // 标签在笔记中使用，这里只需要重新渲染界面
+    // 检查标签是否已存在（不区分大小写）
+    const allTagNames = getAllTags().map(t => t.name.toLowerCase());
+    if (allTagNames.includes(tag.toLowerCase())) {
+      alert(`标签 "${tag}" 已存在`);
+      return;
+    }
+    
+    // 如果当前有选中的笔记，就将标签添加到该笔记
+    if (selectedNote) {
+      const updatedNote = {
+        ...selectedNote,
+        tags: [...(selectedNote.tags || []), tag],
+        updatedAt: new Date().toISOString()
+      };
+      updateNote(updatedNote);
+    } else {
+      // 如果没有选中的笔记，创建一个带有该标签的新笔记
+      const newNote: Note = {
+        id: Date.now().toString(),
+        title: '包含新标签的笔记',
+        content: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        category: '',
+        tags: [tag],
+        favorite: false
+      };
+      setNotes([newNote, ...notes]);
+      setSelectedNoteId(newNote.id);
+    }
+    
+    // 保持在标签页
     setActiveView('tags');
   };
   
