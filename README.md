@@ -70,7 +70,7 @@ D:\mdnote\
 1. 克隆仓库或下载源代码
 
    ```bash
-   git clone <仓库地址> mdnote
+   git clone https://github.com/liujx266/webnote-md.git
    cd mdnote
    ```
 
@@ -135,4 +135,4 @@ MIT
 
 ---
 
-项目由 [Camellia]创建和维护。
+项目由 **Camellia**创建和维护。
