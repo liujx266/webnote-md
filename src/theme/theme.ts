@@ -32,64 +32,64 @@ export interface Theme {
 }
 
 const lightTheme: Theme = {
-  primary: '#3498db',
-  accent: '#e74c3c',
-  background: '#ffffff',
-  foreground: '#333333',
-  sidebar: {
-    background: '#2c3e50',
-    foreground: '#ecf0f1',
-    activeItem: '#3498db',
+  primary: '#4A90E2', // A gentle, modern blue
+  accent: '#F5A623', // A soft, friendly orange for accents
+  background: '#FFFFFF', // Pure white background
+  foreground: '#333333', // Dark grey for text, not pure black
+  sidebar: { // This will be repurposed for the new top navigation
+    background: '#FFFFFF',
+    foreground: '#555555',
+    activeItem: '#4A90E2',
   },
   noteList: {
-    background: '#f5f5f5',
+    background: '#F9F9F9', // Very light grey for the list area
     foreground: '#333333',
-    border: '#e0e0e0',
-    activeItem: 'rgba(52, 152, 219, 0.1)',
+    border: '#EAEAEA', // Soft border color
+    activeItem: '#E8F1FC', // A very light blue for active selection
   },
   editor: {
-    background: '#ffffff',
+    background: '#FFFFFF',
     foreground: '#333333',
-    border: '#e0e0e0',
+    border: '#EAEAEA',
   },
   preview: {
-    background: '#ffffff',
+    background: '#FFFFFF',
     foreground: '#333333',
-    border: '#e0e0e0',
-    codeBackground: '#f6f8fa',
-    blockquoteColor: '#6a737d',
-    linkColor: '#0366d6',
+    border: '#EAEAEA',
+    codeBackground: '#F7F7F7',
+    blockquoteColor: '#777777',
+    linkColor: '#4A90E2',
   },
 };
 
 const darkTheme: Theme = {
-  primary: '#3498db',
-  accent: '#e74c3c',
-  background: '#1e1e1e',
-  foreground: '#d4d4d4',
-  sidebar: {
-    background: '#252526',
-    foreground: '#d4d4d4',
-    activeItem: '#3498db',
+  primary: '#5E9BEF', // A slightly brighter blue for dark mode
+  accent: '#F7B556', // A soft orange for dark mode accents
+  background: '#1A1A1A', // A very dark grey, not pure black
+  foreground: '#E0E0E0', // Light grey for text
+  sidebar: { // This will be repurposed for the new top navigation
+    background: '#212121',
+    foreground: '#CCCCCC',
+    activeItem: '#5E9BEF',
   },
   noteList: {
-    background: '#252526',
-    foreground: '#d4d4d4',
-    border: '#3c3c3c',
-    activeItem: 'rgba(52, 152, 219, 0.2)',
+    background: '#212121',
+    foreground: '#E0E0E0',
+    border: '#333333',
+    activeItem: '#2C3A4B', // A subtle dark blue for selection
   },
   editor: {
-    background: '#1e1e1e',
-    foreground: '#d4d4d4',
-    border: '#3c3c3c',
+    background: '#1A1A1A',
+    foreground: '#E0E0E0',
+    border: '#333333',
   },
   preview: {
-    background: '#1e1e1e',
-    foreground: '#d4d4d4',
-    border: '#3c3c3c',
-    codeBackground: '#2d2d2d',
-    blockquoteColor: '#9e9e9e',
-    linkColor: '#6cb6ff',
+    background: '#1A1A1A',
+    foreground: '#E0E0E0',
+    border: '#333333',
+    codeBackground: '#252525',
+    blockquoteColor: '#AAAAAA',
+    linkColor: '#5E9BEF',
   },
 };
 

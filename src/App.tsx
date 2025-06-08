@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import Sidebar from './components/Sidebar.tsx'
+import TopNavbar from './components/TopNavbar.tsx'
 import NoteList from './components/NoteList.tsx'
 import NoteEditor from './components/NoteEditor.tsx'
 import NoteView from './components/NoteView.tsx'
@@ -14,18 +14,23 @@ import { exportNote } from './utils/exportUtils.ts'
 // 修改样式使应用铺满整个屏幕
 const AppContainer = styled.div`
   display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
-  max-width: 100%; // 确保不会超出视口宽度
-  color: ${props => props.theme.foreground};
-  background-color: ${props => props.theme.background};
-  position: fixed; // 固定位置
+  max-width: 100%;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: hidden; // 防止滚动条
+  overflow: hidden;
 `
+
+const Workspace = styled.div`
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+`;
 
 const MainContent = styled.div`
   display: flex;
@@ -42,7 +47,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showExportDialog, setShowExportDialog] = useState<boolean>(false);
   const [exportFormat, setExportFormat] = useState<ExportFormat>('markdown');
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   // 加载保存在localStorage的笔记和上次选择的笔记ID
   useEffect(() => {
@@ -120,6 +125,16 @@ function App() {
   useEffect(() => {
     localStorage.setItem('mdnotes_lastActiveView', activeView);
   }, [activeView]);
+
+  // 将主题颜色应用为CSS变量
+  useEffect(() => {
+    if (theme) {
+      document.body.style.setProperty('--background-color', theme.background);
+      document.body.style.setProperty('--foreground-color', theme.foreground);
+      document.body.style.setProperty('--primary-color', theme.primary);
+      document.body.style.setProperty('--link-color', theme.preview.linkColor);
+    }
+  }, [theme]);
 
   // 创建新笔记
   const createNote = () => {
@@ -334,85 +349,82 @@ function App() {
 
   return (
     <AppContainer>
-      <Sidebar 
-        isEditing={activeView === 'notes'} 
-        toggleEditMode={() => {}} // 暂时不使用此功能
+      <TopNavbar
         activeView={activeView}
         onChangeView={setActiveView}
+        onNewNote={createNote}
         onExportNote={handleExportNote}
+        toggleTheme={toggleTheme}
       />
-      
-      {/* 主要内容区域 */}
-      <NoteList 
-        notes={filteredNotes}
-        selectedNoteId={selectedNoteId}
-        filter={{ 
-          view: activeView 
-        }}
-        onSelectNote={setSelectedNoteId}
-        onCreateNote={createNote}
-        onDeleteNote={deleteNote}
-        onToggleFavorite={toggleFavorite}
-        onSearch={searchNotes}
-      />
-      
-      <MainContent>
-        {/* 笔记视图 */}
-        {activeView === 'notes' && (
-          <>
-            {selectedNote ? (
-              <>
-                <NoteEditor 
-                  note={selectedNote}
-                  onUpdateNote={updateNote}
-                  categories={categories}
-                  isVisible={true}
-                />
-                <NoteView 
-                  note={selectedNote} 
-                  isVisible={true}
-                />
-              </>
-            ) : (
-              <div style={{ 
-                flex: 1, 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                color: theme.foreground,
-                opacity: 0.7
-              }}>
-                <p>请从左侧列表选择一个笔记或创建一个新笔记</p>
-              </div>
-            )}
-          </>
-        )}
-        
-        {/* 分类管理视图 */}
-        {activeView === 'categories' && (
-          <CategoryManager 
-            categories={categories}
-            onAddCategory={addCategory}
-            onUpdateCategory={updateCategory}
-            onDeleteCategory={deleteCategory}
-          />
-        )}
-        
-        {/* 标签管理视图 */}
-        {activeView === 'tags' && (
-          <TagManager 
-            tags={allTags}
-            onAddTag={addTag}
-            onDeleteTag={deleteTag}
-          />
-        )}
-      </MainContent>
+      <Workspace>
+        <NoteList
+          notes={filteredNotes}
+          selectedNoteId={selectedNoteId}
+          filter={{ view: activeView }}
+          onSelectNote={setSelectedNoteId}
+          onCreateNote={createNote}
+          onDeleteNote={deleteNote}
+          onToggleFavorite={toggleFavorite}
+          onSearch={searchNotes}
+        />
+        <MainContent>
+          {/* 笔记视图 */}
+          {activeView === 'notes' && (
+            <>
+              {selectedNote ? (
+                <>
+                  <NoteEditor
+                    note={selectedNote}
+                    onUpdateNote={updateNote}
+                    categories={categories}
+                    isVisible={true}
+                  />
+                  <NoteView
+                    note={selectedNote}
+                    isVisible={true}
+                  />
+                </>
+              ) : (
+                <div style={{
+                  flex: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: theme.foreground,
+                  opacity: 0.7
+                }}>
+                  <p>请从左侧列表选择一个笔记或创建一个新笔记</p>
+                </div>
+              )}
+            </>
+          )}
+          
+          {/* 分类管理视图 */}
+          {activeView === 'categories' && (
+            <CategoryManager
+              categories={categories}
+              onAddCategory={addCategory}
+              onUpdateCategory={updateCategory}
+              onDeleteCategory={deleteCategory}
+            />
+          )}
+          
+          {/* 标签管理视图 */}
+          {activeView === 'tags' && (
+            <TagManager
+              tags={allTags}
+              onAddTag={addTag}
+              onDeleteTag={deleteTag}
+            />
+          )}
+        </MainContent>
+      </Workspace>
 
       {/* 导出对话框 */}
       {showExportDialog && selectedNote && (
-        <ExportDialog 
-          note={selectedNote} 
-          onClose={() => setShowExportDialog(false)} 
+        <ExportDialog
+          note={selectedNote}
+          onClose={() => setShowExportDialog(false)}
         />
       )}
     </AppContainer>

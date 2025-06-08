@@ -3,79 +3,71 @@ import styled from 'styled-components';
 import { Note } from '../types';
 
 const NoteListContainer = styled.div`
-  width: 250px;
+  width: 300px;
   background-color: ${props => props.theme.noteList.background};
   border-right: 1px solid ${props => props.theme.noteList.border};
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
 `;
 
 const NoteListHeader = styled.div`
-  padding: 15px;
+  padding: 16px;
   border-bottom: 1px solid ${props => props.theme.noteList.border};
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 const NoteListTitle = styled.h2`
   margin: 0;
-  font-size: 18px;
+  font-size: 1.2em;
   color: ${props => props.theme.noteList.foreground};
+  font-weight: 600;
 `;
 
-const NewNoteButton = styled.button`
-  background-color: ${props => props.theme.primary};
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  
-  &:hover {
-    filter: brightness(90%);
-  }
-`;
 
 const SearchContainer = styled.div`
-  padding: 10px 15px;
+  padding: 12px 16px;
   border-bottom: 1px solid ${props => props.theme.noteList.border};
+  flex-shrink: 0;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid ${props => props.theme.noteList.border};
-  border-radius: 4px;
-  background-color: ${props => props.theme.background};
+  border-radius: 6px;
+  background-color: ${props => props.theme.editor.background};
   color: ${props => props.theme.foreground};
+  transition: all 0.2s ease;
   
   &:focus {
     outline: none;
     border-color: ${props => props.theme.primary};
+    box-shadow: 0 0 0 2px ${props => props.theme.primary}30;
   }
 `;
 
 const NoteItem = styled.div<{ isActive: boolean }>`
-  padding: 15px;
+  padding: 16px;
   cursor: pointer;
   border-bottom: 1px solid ${props => props.theme.noteList.border};
-  background-color: ${props => props.isActive 
-    ? props.theme.noteList.activeItem 
-    : 'transparent'};
+  background-color: ${props => props.isActive ? props.theme.noteList.activeItem : 'transparent'};
+  transition: background-color 0.2s ease;
   
   &:hover {
-    background-color: ${props => props.isActive 
-      ? props.theme.noteList.activeItem 
-      : 'rgba(0, 0, 0, 0.05)'};
+    background-color: ${props => props.theme.noteList.activeItem};
   }
 `;
 
 const NoteTitle = styled.h3`
-  margin: 0;
-  font-size: 16px;
-  margin-bottom: 5px;
+  margin: 0 0 8px 0;
+  font-size: 1em;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -85,64 +77,73 @@ const NoteTitle = styled.h3`
 `;
 
 const NoteDate = styled.div`
-  font-size: 12px;
+  font-size: 0.75em;
   color: ${props => props.theme.noteList.foreground};
-  opacity: 0.7;
+  opacity: 0.6;
 `;
 
 const NoteMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 5px;
-  font-size: 12px;
-  color: ${props => props.theme.noteList.foreground};
-  opacity: 0.7;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 0.75em;
 `;
 
 const NoteCategory = styled.span`
-  padding: 2px 5px;
-  border-radius: 3px;
-  background-color: ${props => props.color || props.theme.primary};
-  color: white;
-  font-size: 10px;
-  margin-right: 5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background-color: ${props => props.color || props.theme.primary}20;
+  color: ${props => props.color || props.theme.primary};
+  font-size: 0.7em;
+  font-weight: 500;
 `;
 
 const NoteTags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 5px;
+  gap: 6px;
+  margin-top: 10px;
 `;
 
 const NoteTag = styled.span`
-  padding: 1px 5px;
-  border-radius: 3px;
+  padding: 2px 6px;
+  border-radius: 4px;
   background-color: ${props => props.theme.noteList.border};
-  color: ${props => props.theme.noteList.foreground};
-  font-size: 10px;
+  color: ${props => props.theme.noteList.foreground}90;
+  font-size: 0.7em;
 `;
 
 const ActionButtons = styled.div`
   display: flex;
-  gap: 5px;
-  margin-top: 5px;
+  gap: 8px;
+  margin-top: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  ${NoteItem}:hover & {
+    opacity: 1;
+  }
 `;
 
 const ActionButton = styled.button`
   background-color: transparent;
-  color: ${props => props.theme.noteList.foreground};
-  border: 1px solid ${props => props.theme.noteList.border};
-  padding: 3px 5px;
-  border-radius: 3px;
-  font-size: 10px;
+  color: ${props => props.theme.noteList.foreground}90;
+  border: none;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 0.8em;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    color: ${props => props.theme.noteList.foreground};
+    background-color: ${props => props.theme.noteList.border};
   }
   
-  &.delete {
+  &.delete:hover {
     color: ${props => props.theme.accent};
   }
   
@@ -194,7 +195,6 @@ const NoteList = ({
     <NoteListContainer>
       <NoteListHeader>
         <NoteListTitle>{getViewTitle()}</NoteListTitle>
-        <NewNoteButton onClick={onCreateNote}>新建</NewNoteButton>
       </NoteListHeader>
       
       <SearchContainer>

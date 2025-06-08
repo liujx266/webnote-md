@@ -1,4 +1,6 @@
 import { Note, ExportFormat } from '../types';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 /**
  * 将笔记导出为不同格式的文件
@@ -26,10 +28,6 @@ export const exportNote = (note: Note, format: ExportFormat): void => {
       fileType = 'text/plain';
       extension = 'txt';
       break;
-    case 'pdf':
-      // PDF导出需要额外的库支持，这里暂时不实现
-      alert('PDF导出功能正在开发中，敬请期待！');
-      return;
     default:
       content = `# ${note.title}\n\n${note.content}`;
       fileType = 'text/markdown';
@@ -52,6 +50,56 @@ export const exportNote = (note: Note, format: ExportFormat): void => {
   
   // 清理URL对象
   URL.revokeObjectURL(url);
+};
+
+/**
+ * 将指定的HTML元素导出为PDF文件
+ * @param title 文件名
+ * @param element 要导出的HTML元素
+ */
+export const exportNoteAsPdf = async (title: string, element: HTMLElement): Promise<void> => {
+  const originalHeight = element.style.height;
+  const originalOverflow = element.style.overflowY;
+
+  try {
+    // 增加安全边距，确保捕获所有内容
+    const scrollHeight = element.scrollHeight;
+    const heightWithPadding = scrollHeight + 200;
+
+    // 暂时修改样式以捕获完整内容
+    element.style.height = `${heightWithPadding}px`;
+    element.style.overflowY = 'visible';
+
+    const canvas = await html2canvas(element, {
+      scale: 2, // 提高分辨率
+      useCORS: true, // 允许加载跨域图片
+      backgroundColor: window.getComputedStyle(document.body).backgroundColor, // 使用当前主题背景色
+      windowHeight: heightWithPadding,
+      scrollY: -window.scrollY,
+    });
+
+    // 恢复原始样式
+    element.style.height = originalHeight;
+    element.style.overflowY = originalOverflow;
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: [canvas.width, canvas.height]
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save(`${title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+
+  } catch (error) {
+    console.error('导出PDF时出错:', error);
+    alert('导出PDF失败，请查看控制台获取更多信息。');
+  } finally {
+    // 确保在任何情况下都恢复原始样式
+    element.style.height = originalHeight;
+    element.style.overflowY = originalOverflow;
+  }
 };
 
 /**

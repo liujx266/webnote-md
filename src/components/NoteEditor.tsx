@@ -6,25 +6,30 @@ const EditorContainer = styled.div<{ isVisible: boolean }>`
   display: ${props => props.isVisible ? 'flex' : 'none'};
   flex: 1;
   flex-direction: column;
-  padding: 20px;
+  padding: 24px 32px;
   background-color: ${props => props.theme.editor.background};
   color: ${props => props.theme.editor.foreground};
   border-right: 1px solid ${props => props.theme.editor.border};
+  transition: all 0.3s ease;
+  overflow-y: auto;
 `;
 
 const EditorHeader = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
 `;
 
 const TitleInput = styled.input`
   width: 100%;
-  padding: 10px;
-  font-size: 18px;
-  border: 1px solid ${props => props.theme.editor.border};
-  border-radius: 4px;
-  margin-bottom: 10px;
-  background-color: ${props => props.theme.background};
+  padding: 12px 0;
+  font-size: 2em;
+  font-weight: 700;
+  border: none;
+  border-bottom: 1px solid ${props => props.theme.editor.border};
+  margin-bottom: 16px;
+  background-color: transparent;
   color: ${props => props.theme.foreground};
+  transition: border-color 0.2s ease;
   
   &:focus {
     outline: none;
@@ -34,27 +39,29 @@ const TitleInput = styled.input`
 
 const MetaContainer = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: center;
 `;
 
 const Select = styled.select`
-  padding: 8px;
+  padding: 8px 12px;
   border: 1px solid ${props => props.theme.editor.border};
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.foreground};
   
   &:focus {
     outline: none;
     border-color: ${props => props.theme.primary};
+    box-shadow: 0 0 0 2px ${props => props.theme.primary}30;
   }
 `;
 
 const TagInput = styled.input`
-  padding: 8px;
+  padding: 8px 12px;
   border: 1px solid ${props => props.theme.editor.border};
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.foreground};
   flex-grow: 1;
@@ -62,22 +69,24 @@ const TagInput = styled.input`
   &:focus {
     outline: none;
     border-color: ${props => props.theme.primary};
+    box-shadow: 0 0 0 2px ${props => props.theme.primary}30;
   }
 `;
 
 const TagsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 16px;
 `;
 
 const Tag = styled.div`
-  padding: 4px 8px;
-  background-color: ${props => props.theme.primary};
-  color: white;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 4px 10px;
+  background-color: ${props => props.theme.noteList.border};
+  color: ${props => props.theme.noteList.foreground}90;
+  border-radius: 16px;
+  font-size: 0.8em;
+  font-weight: 500;
   display: flex;
   align-items: center;
 `;
@@ -85,29 +94,34 @@ const Tag = styled.div`
 const TagRemoveButton = styled.button`
   background-color: transparent;
   border: none;
-  color: white;
-  margin-left: 5px;
+  color: ${props => props.theme.accent};
+  margin-left: 6px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1.2em;
   line-height: 1;
-  padding: 0 2px;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 const ContentTextarea = styled.textarea`
   flex: 1;
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid ${props => props.theme.editor.border};
-  border-radius: 4px;
+  padding: 16px 0;
+  font-size: 1em;
+  line-height: 1.7;
+  border: none;
   resize: none;
-  font-family: 'Courier New', Courier, monospace;
-  background-color: ${props => props.theme.background};
+  font-family: inherit;
+  background-color: transparent;
   color: ${props => props.theme.foreground};
   
   &:focus {
     outline: none;
-    border-color: ${props => props.theme.primary};
   }
 `;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ExportFormat, Note } from '../types';
-import { exportNote } from '../utils/exportUtils';
+import { exportNote, exportNoteAsPdf } from '../utils/exportUtils';
 
 const Overlay = styled.div`
   position: fixed;
@@ -104,7 +104,6 @@ interface ExportDialogProps {
   onClose: () => void;
 }
 
-// 导出格式的配置
 const formatOptions = [
   {
     id: 'markdown',
@@ -127,9 +126,9 @@ const formatOptions = [
   {
     id: 'pdf',
     name: 'PDF文档 (.pdf)',
-    description: '导出为PDF文档（开发中）',
+    description: '将笔记预览导出为PDF文件',
     icon: '📑',
-    disabled: true
+    disabled: false
   }
 ];
 
@@ -137,7 +136,16 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ note, onClose }) => {
   const [selectedFormat, setSelectedFormat] = React.useState<ExportFormat>('markdown');
   
   const handleExport = () => {
-    exportNote(note, selectedFormat);
+    if (selectedFormat === 'pdf') {
+      const viewElement = document.getElementById('note-view-content');
+      if (viewElement) {
+        exportNoteAsPdf(note.title, viewElement);
+      } else {
+        alert('无法找到要导出的内容。');
+      }
+    } else {
+      exportNote(note, selectedFormat);
+    }
     onClose();
   };
   
